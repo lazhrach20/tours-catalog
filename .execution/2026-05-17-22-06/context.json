@@ -3,17 +3,907 @@
   "prdPath": "prds/tz_main.md",
   "prdTitle": "Каталог туров (публичная часть + админка)",
   "status": "in_progress",
-  "currentPhase": "analysis",
+  "currentPhase": "implementation",
   "startedAt": "2026-05-17T22:06:00+00:00",
   "phases": {
-    "analysis": { "status": "in_progress" },
-    "codebase": { "status": "pending" },
-    "planning": { "status": "pending" },
-    "decomposition": { "status": "pending" },
-    "implementation": { "status": "pending" },
-    "review": { "status": "pending" },
-    "report": { "status": "pending" }
+    "analysis": {
+      "status": "completed",
+      "completedAt": "2026-05-17T22:08:00+00:00",
+      "featureCount": 12,
+      "acceptanceCriteriaCount": 7,
+      "userStoryCount": 12,
+      "summary": "Проект «Каталог туров» — полноценный вертикальный срез от SSR-витрины до PostgreSQL с pgvector: публичная часть с фильтрами, семантическим поиском (Hugging Face embeddings + fallback fulltext), карточками и детальными страницами с Яндекс.Картами; админка с аутентификацией и CRUD турами, медиа, маршрутом, датами/ценами и категориями; опционально LLM-генерация черновиков. Бронирование и оплата явно исключены."
+    },
+    "codebase": {
+      "status": "completed",
+      "completedAt": "2026-05-17T22:12:00+00:00",
+      "isGreenfield": true,
+      "summary": "Repository is a greenfield planning workspace. PRD, Cursor rules/skills, and execution context exist; no application code yet."
+    },
+    "planning": {
+      "status": "completed",
+      "completedAt": "2026-05-17T22:18:00+00:00",
+      "layerCount": 11,
+      "estimatedTaskCount": "48-62",
+      "summary": "11 layers: infra → DB → embeddings → Laravel public API → search → admin API → public frontend → admin frontend → LLM → tests/CI → polish",
+      "keyDecisions": [
+        "Laravel 11 + Sanctum SPA session",
+        "Markdown → sanitized HTML",
+        "Offset pagination",
+        "PrimeVue + Tailwind 4 custom theme",
+        "HF paraphrase-multilingual-MiniLM-L12-v2, vector(384)",
+        "Sync embedding on save (MVP)",
+        "Yandex Maps JS API"
+      ],
+      "layers": [
+        "1. Infrastructure & monorepo scaffold",
+        "2. Database schema & seed",
+        "3. Embeddings microservice",
+        "4. Laravel core API (public + cross-cutting)",
+        "5. Semantic & fulltext search",
+        "6. Admin API (auth + CRUD)",
+        "7. Frontend — public (Vike SSR)",
+        "8. Frontend — admin (CSR)",
+        "9. LLM draft generation (plus)",
+        "10. Tests & CI",
+        "11. Polish & production readiness"
+      ]
+    },
+    "decomposition": {
+      "status": "completed",
+      "completedAt": "2026-05-17T18:24:51.569Z",
+      "taskCount": 62,
+      "fastCount": 28,
+      "defaultCount": 34
+    },
+    "implementation": {
+      "status": "pending"
+    },
+    "review": {
+      "status": "pending"
+    },
+    "report": {
+      "status": "pending"
+    }
   },
   "signal": 42,
-  "tasks": []
+  "tasks": [
+    {
+      "id": "task-001",
+      "title": "Init monorepo root package.json",
+      "description": "Create root package.json with npm/pnpm workspaces pointing to apps/web and apps/api. Add minimal scripts for workspace install. Touch: package.json, .npmrc (optional).",
+      "domain": "infra",
+      "skill": "infra-setup",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [],
+      "status": "pending"
+    },
+    {
+      "id": "task-002",
+      "title": "Add docker-compose.yml base stack",
+      "description": "Define services db, api, web, embeddings on internal network with named volumes for postgres and media. Touch: docker-compose.yml.",
+      "domain": "infra",
+      "skill": "infra-setup",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-001"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-003",
+      "title": "Create service Dockerfiles and nginx",
+      "description": "Add Dockerfiles for api (PHP-FPM+nginx), web (Node), embeddings (Python), and db pgvector image reference. Touch: apps/api/Dockerfile, apps/web/Dockerfile, services/embeddings/Dockerfile.",
+      "domain": "infra",
+      "skill": "infra-setup",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-002"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-004",
+      "title": "Add root .env.example",
+      "description": "Document all env vars: DB, API, web, embeddings URL, Yandex Maps key, LLM endpoint, admin seed credentials, search thresholds. Touch: .env.example.",
+      "domain": "infra",
+      "skill": "infra-setup",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-002"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-005",
+      "title": "Makefile core dev commands",
+      "description": "Implement make help, env, setup, build, up, down, restart, ps, logs, health targets wrapping docker compose. Touch: Makefile, scripts/compose.sh (optional).",
+      "domain": "infra",
+      "skill": "infra-setup",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-004"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-006",
+      "title": "Makefile DB API web targets",
+      "description": "Add migrate, seed, fresh, db-shell, artisan, api-shell, web-shell, web-install, reindex-embeddings, test, ci targets. Touch: Makefile.",
+      "domain": "infra",
+      "skill": "infra-setup",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-005"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-007",
+      "title": "Write README onboarding guide",
+      "description": "Document make setup first run, WSL2/make on Windows, service ports, embeddings cold start. Touch: README.md.",
+      "domain": "infra",
+      "skill": "infra-setup",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-006"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-008",
+      "title": "Scaffold Laravel 11 in apps/api",
+      "description": "Create fresh Laravel 11 app with /api/v1 route prefix, PostgreSQL .env defaults, storage link ready. Touch: apps/api/composer.json, apps/api/bootstrap/app.php, apps/api/routes/api.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-003",
+        "task-005"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-009",
+      "title": "Migration enable pgvector extension",
+      "description": "Add migration that runs CREATE EXTENSION IF NOT EXISTS vector. Touch: apps/api/database/migrations/*_enable_pgvector.php.",
+      "domain": "database",
+      "skill": "database-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-008"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-010",
+      "title": "Migrations users and categories",
+      "description": "Create users table (email, password) and categories (name, slug, icon/color nullable) with Eloquent models. Touch: two migrations, User.php, Category.php.",
+      "domain": "database",
+      "skill": "database-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-009"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-011",
+      "title": "Migration tours with embedding vector",
+      "description": "Create tours table with slug, descriptions, duration, status, meta fields, embedding vector(384), published_at. Add tour_category pivot. Touch: tours migration, Tour.php, pivot migration.",
+      "domain": "database",
+      "skill": "database-implementer",
+      "complexity": "medium",
+      "model": "fast",
+      "dependencies": [
+        "task-010"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-012",
+      "title": "Migrations photos route departures",
+      "description": "Add tour_photos, route_points, tour_departures tables with models TourPhoto, RoutePoint, TourDeparture. Touch: three migrations, three models.",
+      "domain": "database",
+      "skill": "database-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-011"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-013",
+      "title": "Add search indexes migrations",
+      "description": "Add tsvector GIN index on title+short_description and HNSW index on embedding column. Touch: apps/api/database/migrations/*_search_indexes.php.",
+      "domain": "database",
+      "skill": "database-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-011"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-014",
+      "title": "Wire Tour Eloquent relationships",
+      "description": "Define belongsToMany categories, hasMany photos/routePoints/departures, scopes for published and future departures. Touch: Tour.php, related models.",
+      "domain": "database",
+      "skill": "database-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-012"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-015",
+      "title": "Seed categories and admin user",
+      "description": "CategorySeeder with 5-8 categories; AdminUserSeeder reading email/password from env. Register in DatabaseSeeder. Touch: CategorySeeder.php, AdminUserSeeder.php, DatabaseSeeder.php.",
+      "domain": "database",
+      "skill": "database-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-010"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-016",
+      "title": "Seed demo tours with relations",
+      "description": "TourSeeder creating 10-15 tours (mixed statuses) with photos, route points, departures for published ones. Touch: TourSeeder.php, factories if needed.",
+      "domain": "database",
+      "skill": "database-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-014",
+        "task-015"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-017",
+      "title": "Scaffold FastAPI embeddings service",
+      "description": "Create services/embeddings with FastAPI app, requirements.txt, basic project layout and Dockerfile integration. Touch: services/embeddings/main.py, requirements.txt, __init__.py.",
+      "domain": "ai-layer",
+      "skill": "embeddings-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-003"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-018",
+      "title": "Implement POST /embed and health",
+      "description": "Load paraphrase-multilingual-MiniLM-L12-v2, expose POST /embed returning 384-dim vector and GET /health. Touch: services/embeddings/main.py, services/embeddings/model.py.",
+      "domain": "ai-layer",
+      "skill": "embeddings-implementer",
+      "complexity": "high",
+      "model": "default",
+      "dependencies": [
+        "task-017"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-019",
+      "title": "Add global JSON API error handler",
+      "description": "Render validation and exceptions as {message, errors?, code?} with correct HTTP codes. Register api/v1 prefix group. Touch: apps/api/bootstrap/app.php, app/Exceptions/Handler.php or middleware.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-008"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-020",
+      "title": "Add health and categories endpoints",
+      "description": "GET /api/v1/health and GET /api/v1/categories with CategoryResource JSON. Touch: HealthController.php, CategoryController.php, CategoryResource.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-019",
+        "task-010"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-021",
+      "title": "Build TourListFilter query service",
+      "description": "Apply category OR, duration range, price range on min future departure, date interval filters for published tours only. Touch: app/Services/TourListFilter.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-014"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-022",
+      "title": "Create TourCardResource DTO",
+      "description": "Serialize list card: cover, title, categories chips, duration, from-price, next departure date. Touch: app/Http/Resources/TourCardResource.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-014"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-023",
+      "title": "Implement GET /api/v1/tours list",
+      "description": "Public paginated catalog with sort options (nearest date, price, duration, newest) using TourListFilter and TourCardResource. Touch: TourController.php, routes/api.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-021",
+        "task-022"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-024",
+      "title": "Add Markdown sanitizer service",
+      "description": "Convert admin Markdown full_description to sanitized HTML for public output. Touch: app/Services/MarkdownSanitizer.php, config if needed.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-008"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-025",
+      "title": "Implement GET /tours/{slug} detail",
+      "description": "Return published tour with gallery, sanitized description, future departures, route points; 404 for draft/missing. Touch: TourController.php, TourDetailResource.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-023",
+        "task-024"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-026",
+      "title": "Create EmbeddingsClient HTTP wrapper",
+      "description": "Internal HTTP client calling embeddings POST /embed with timeout and env base URL. Touch: app/Services/Embeddings/EmbeddingsClient.php, config/services.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-018",
+        "task-008"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-027",
+      "title": "Build TourEmbeddingService sync",
+      "description": "Concatenate title+short+full text, call EmbeddingsClient, persist vector on tours.embedding. Touch: app/Services/Embeddings/TourEmbeddingService.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-026",
+        "task-011"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-028",
+      "title": "Implement SemanticSearchService",
+      "description": "Cosine similarity search on pgvector among published tours combined with TourListFilter; env top-K and min score. Touch: app/Services/Search/SemanticSearchService.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "high",
+      "model": "default",
+      "dependencies": [
+        "task-027",
+        "task-013"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-029",
+      "title": "Implement FulltextSearchService fallback",
+      "description": "PostgreSQL tsvector search on title and short_description when embeddings unavailable. Touch: app/Services/Search/FulltextSearchService.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-013"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-030",
+      "title": "Wire q search and reindex command",
+      "description": "Integrate q param into GET /tours with semantic→fulltext fallback; add artisan tours:reindex-embeddings batch command. Touch: TourController.php, app/Console/Commands/ReindexEmbeddingsCommand.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "high",
+      "model": "default",
+      "dependencies": [
+        "task-023",
+        "task-028",
+        "task-029",
+        "task-027"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-031",
+      "title": "Configure Sanctum SPA session auth",
+      "description": "Install Sanctum, SPA stateful domains, session guard, CORS for web origin. Touch: config/sanctum.php, config/cors.php, bootstrap/app.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-008"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-032",
+      "title": "Add admin login and logout",
+      "description": "POST /api/v1/admin/auth/login and logout with credential validation and 401 JSON errors. Touch: AdminAuthController.php, LoginRequest.php, routes/api.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-031",
+        "task-010"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-033",
+      "title": "Register admin auth middleware group",
+      "description": "Protect all /admin/* routes with auth:sanctum middleware alias. Touch: routes/api.php, bootstrap/app.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-032"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-034",
+      "title": "Admin tours store and update",
+      "description": "POST /admin/tours and PATCH /admin/tours/{id} with Form Requests, slug autogen, sync categories, trigger TourEmbeddingService on text change. Touch: AdminTourController.php, StoreTourRequest.php, UpdateTourRequest.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "high",
+      "model": "default",
+      "dependencies": [
+        "task-033",
+        "task-027"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-035",
+      "title": "Admin tours list and detail GET",
+      "description": "GET /admin/tours with status filter and title search; GET /admin/tours/{id} for editor preload. Touch: AdminTourController.php, AdminTourResource.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-033"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-036",
+      "title": "Implement publish tour endpoint",
+      "description": "POST /admin/tours/{id}/publish validating cover, description, future departure, route points≥2; set PUBLISHED. Touch: PublishTourAction.php, AdminTourController.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "high",
+      "model": "default",
+      "dependencies": [
+        "task-034",
+        "task-012"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-037",
+      "title": "Admin photo upload reorder delete",
+      "description": "Multipart POST photos, PATCH reorder, DELETE photo with Storage disk and single is_cover rule. Touch: AdminPhotoController.php, PhotoUploadRequest.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-034",
+        "task-012"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-038",
+      "title": "Admin route-points PUT endpoint",
+      "description": "Replace entire route for tour: title, lat, lng, sort_order array. Touch: AdminRouteController.php, ReplaceRoutePointsRequest.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-034"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-039",
+      "title": "Admin departures nested CRUD",
+      "description": "CRUD /admin/tours/{id}/departures with validation: price>0, no duplicate start_date, no past dates on create. Touch: AdminDepartureController.php, DepartureRequest.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-034"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-040",
+      "title": "Admin categories CRUD with guard",
+      "description": "CRUD /admin/categories; return 409 when deleting category linked to tours. Touch: AdminCategoryController.php, CategoryRequest.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-033",
+        "task-010"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-041",
+      "title": "Scaffold Vue3 Vike Vite app",
+      "description": "Init apps/web with Vue 3, Vike SSR, Vite, Tailwind CSS 4, PrimeVue plugin registration. Touch: apps/web/package.json, vite.config.ts, +vike config.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-001",
+        "task-003"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-042",
+      "title": "Apply PrimeVue custom theme",
+      "description": "Configure brand colors, typography, radii via PrimeVue theme preset and Tailwind 4 tokens. Touch: apps/web/src/styles/theme.css, apps/web/src/plugins/primevue.ts.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-041"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-043",
+      "title": "Create ofetch API client composable",
+      "description": "Shared fetch wrapper with base URL, error parsing to typed ApiError, credentials include for admin. Touch: apps/web/src/composables/useApi.ts.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-041"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-044",
+      "title": "Vike SSR /tours catalog page",
+      "description": "SSR loader fetching GET /tours with pagination; page shell with layout and loading skeleton. Touch: pages/tours/+Page.vue, +data.ts.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-043",
+        "task-023"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-045",
+      "title": "TourCard grid and pagination UI",
+      "description": "Responsive card grid showing cover, chips, duration, from-price, next date; offset pagination controls. Touch: components/tours/TourCard.vue, TourGrid.vue.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-044"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-046",
+      "title": "Filters sidebar with URL sync",
+      "description": "Category multiselect, duration/price/date ranges, reset button; sync query params for SSR and shareable URLs. Touch: components/tours/TourFilters.vue.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-044",
+        "task-020"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-047",
+      "title": "Semantic search input on catalog",
+      "description": "Search field debouncing q param; empty query clears semantic mode; error/empty states. Touch: components/tours/TourSearch.vue, pages/tours/+Page.vue.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-046",
+        "task-030"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-048",
+      "title": "Vike SSR tour detail page",
+      "description": "Route /tours/[slug] with SSR loader, gallery lightbox, departures table, SEO title/meta/OG tags. Touch: pages/tours/@slug/+Page.vue, +data.ts.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-043",
+        "task-025"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-049",
+      "title": "YandexMapRoute public component",
+      "description": "Read-only Yandex Maps with markers and polyline from route_points; load API key from env. Touch: components/maps/YandexMapRoute.vue.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-048"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-050",
+      "title": "Add home redirect to /tours",
+      "description": "Root / redirects to /tours; basic layout header/footer for public pages. Touch: pages/index/+Page.vue, layouts/PublicLayout.vue.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-044"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-051",
+      "title": "Admin CSR shell and login page",
+      "description": "CSR-only /admin/login with session login form and redirect; admin layout with nav guard. Touch: pages/admin/login/+Page.vue, layouts/AdminLayout.vue.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-043",
+        "task-032"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-052",
+      "title": "Admin tours list page",
+      "description": "Table of all tours with status filter, title search, links to edit. Touch: pages/admin/tours/+Page.vue, components/admin/TourTable.vue.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-051",
+        "task-035"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-053",
+      "title": "Admin tour editor tabs shell",
+      "description": "Create/edit form with tabs: Main, Photos, Route, Departures, SEO; save draft actions. Touch: pages/admin/tours/@id/edit/+Page.vue, TourEditorTabs.vue.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "high",
+      "model": "default",
+      "dependencies": [
+        "task-052",
+        "task-034"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-054",
+      "title": "Admin photos tab drag-drop",
+      "description": "Upload multiple images, set cover, reorder, delete with toast errors. Touch: components/admin/TourPhotosTab.vue.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-053",
+        "task-037"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-055",
+      "title": "Admin route editor Yandex map",
+      "description": "Interactive map: add/remove/reorder points via click and manual lat/lng; save via PUT route-points. Touch: components/admin/TourRouteTab.vue.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "high",
+      "model": "default",
+      "dependencies": [
+        "task-053",
+        "task-038"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-056",
+      "title": "Admin departures and categories pages",
+      "description": "Departures tab inline CRUD; /admin/categories page with CRUD table. Touch: TourDeparturesTab.vue, pages/admin/categories/+Page.vue.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-053",
+        "task-039",
+        "task-040"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-057",
+      "title": "LLM tour generate endpoint",
+      "description": "POST /admin/tours/generate calling OpenAI-compatible API, map JSON to DRAFT tour fields, rate limit 10/hr. Touch: GenerateTourAction.php, LlmClient.php, AdminGenerateController.php.",
+      "domain": "ai-layer",
+      "skill": "laravel-implementer",
+      "complexity": "high",
+      "model": "default",
+      "dependencies": [
+        "task-033",
+        "task-040"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-058",
+      "title": "Admin LLM generate UI tab",
+      "description": "Prompt form on new tour flow calling generate endpoint and prefilling editor as DRAFT. Touch: components/admin/TourGenerateForm.vue, pages/admin/tours/new/+Page.vue.",
+      "domain": "frontend",
+      "skill": "vue-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-053",
+        "task-057"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-059",
+      "title": "Feature tests auth and publish",
+      "description": "PHPUnit tests for admin 401, publish 422 without cover/dates/route, successful publish. Touch: tests/Feature/AdminAuthTest.php, PublishTourTest.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-036"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-060",
+      "title": "Feature tests catalog and search",
+      "description": "Tests for published-only list, filters, mocked embeddings fallback to fulltext. Touch: tests/Feature/PublicToursTest.php, SemanticSearchTest.php.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-030"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-061",
+      "title": "Add GitHub Actions CI workflow",
+      "description": "Workflow running make ci in compose profile with stub env. Touch: .github/workflows/ci.yml.",
+      "domain": "infra",
+      "skill": "infra-setup",
+      "complexity": "low",
+      "model": "fast",
+      "dependencies": [
+        "task-006",
+        "task-060"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "task-062",
+      "title": "Polish seed embeddings and NFR pass",
+      "description": "Post-seed reindex embeddings for published tours; eager-load list queries; correlation-id middleware; finalize README env table. Touch: DatabaseSeeder hook, TourController, README.md.",
+      "domain": "backend",
+      "skill": "laravel-implementer",
+      "complexity": "medium",
+      "model": "default",
+      "dependencies": [
+        "task-030",
+        "task-016",
+        "task-007"
+      ],
+      "status": "pending"
+    }
+  ]
 }
