@@ -1,0 +1,85 @@
+---
+description: Global error handling — Laravel API exceptions and Vue/Vike UI feedback.
+globs: apps/**/*.{php,vue,ts}
+alwaysApply: false
+---
+
+# Error Handling
+
+## Backend — Laravel
+
+All API errors use a **consistent JSON shape**. Register a global exception handler (or `bootstrap/app.php` customization) — do not return ad-hoc error arrays from controllers.
+
+```php
+// ✅ GOOD — app/Exceptions/Handler.php or dedicated render callback
+return response()->json([
+    'message' => $message,
+    'errors' => $validator->errors(), // 422 only
+    'code' => 'TOUR_PUBLISH_INVALID',
+], $status);
+```
+
+### HTTP mapping
+
+| Situation | Status |
+|-----------|--------|
+| Validation (Form Request) | 422 |
+| Not found | 404 |
+| Unauthenticated admin | 401 |
+| Forbidden | 403 |
+| Business rule (e.g. delete category in use) | 409 |
+| Unexpected server error | 500 |
+
+### Domain errors
+
+Throw typed exceptions or use `abort()` with codes — never silent failures:
+
+```php
+// ✅ GOOD
+abort(404, 'Tour not found');
+throw new PublishTourException('Cover image is required');
+```
+
+### Validation
+
+Use **Form Request** classes on all admin mutating endpoints. Public read endpoints validate query params with rules or dedicated requests.
+
+## Embeddings service
+
+- Timeouts from Laravel (e.g. 3s) → log warning, **fallback to PostgreSQL fulltext** on catalog search.
+- Never expose embeddings internal errors verbatim to end users.
+
+## Frontend — Vue + Vike
+
+### SSR / page data
+
+- Vike `onBeforeRender` / `+data`: catch API errors; return `is404` for missing tours.
+- Do not throw unhandled promise rejections on public pages.
+
+### Mutations (admin)
+
+- Show errors via UI kit toast (PrimeVue Toast / Naive message).
+- Map Laravel `errors` bag to form field messages.
+
+```ts
+// ✅ GOOD
+try {
+  await api.admin.tours.publish(id)
+} catch (e: ApiError) {
+  toast.error(e.message ?? 'Не удалось опубликовать тур')
+  setFormErrors(e.errors)
+}
+```
+
+### API client
+
+```ts
+interface ApiError {
+  status: number
+  message: string
+  errors?: Record<string, string[]>
+  code?: string
+}
+```
+
+Never show raw stack traces or HTML error pages to users.

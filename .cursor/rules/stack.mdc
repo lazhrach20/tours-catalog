@@ -1,0 +1,40 @@
+---
+description: Enforces the mandatory tech stack for the tours catalog project. Prohibits alternatives.
+alwaysApply: true
+---
+
+# Stack Constraints
+
+## Mandatory Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Monorepo | Recommended: `apps/web`, `apps/api`, `services/embeddings` |
+| Frontend | Vue 3 + **Vike** (SSR) + **Vite** + **Tailwind CSS 4** |
+| UI | One Vue UI library with **custom theme** (default: **PrimeVue**; alternatives: Naive UI, Vuetify — pick one per repo) |
+| Backend | **Laravel 11+** (assignment also allows Symfony 7+ / Yii2 — use **one** framework only) |
+| Database | **PostgreSQL 16+** with **pgvector**; ORM: **Eloquent** (Laravel) |
+| Semantic search | Lightweight **Hugging Face** sentence-transformers model in `services/embeddings` |
+| Maps | **Yandex Maps** JavaScript API (public + admin route editor) |
+| Infra | **Docker Compose** + корневой **Makefile** (`make up`, `make setup`, `make test`, …) |
+| LLM (plus) | OpenAI-compatible HTTP API for admin tour draft generation |
+
+## Prohibited — Never Use
+
+- **Frontend**: Next.js, React, Nuxt (without Vike), Remix, SvelteKit for this project
+- **State / data (frontend)**: Redux, Pinia-only global server cache as primary pattern → prefer SSR loaders + composables; refetch after admin mutations
+- **Backend**: NestJS, Express-as-main-app, FastAPI-as-main-API (FastAPI allowed **only** in `services/embeddings`)
+- **ORM (main API)**: Prisma, TypeORM, Drizzle, raw `pg` in application code
+- **CSS**: CSS Modules, styled-components, Emotion → Tailwind 4 + UI kit only
+- **Booking/payment**: any reservation, cart, or checkout flows (out of scope)
+
+## Rules
+
+1. Check this list before adding any dependency.
+2. Replacing a stack element requires explicit justification in PR/commit description.
+3. Public pages use **Vike SSR** for SEO; admin may be CSR with auth guard.
+4. Laravel: controllers thin, logic in services/actions; Form Requests for validation.
+5. API prefix: `/api/v1`; JSON errors: `{ message, errors?, code? }`.
+6. Secrets (DB, Yandex Maps, LLM, HF) only via `.env`, never committed.
+7. Embeddings service is internal (Docker network), not exposed publicly.
+8. Local dev onboarding via `make setup` / `make help`; avoid documenting raw `docker compose` as primary workflow.

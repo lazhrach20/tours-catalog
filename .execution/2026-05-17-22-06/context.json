@@ -1,0 +1,19 @@
+{
+  "executionId": "2026-05-17-22-06",
+  "prdPath": "prds/tz_main.md",
+  "prdTitle": "Каталог туров (публичная часть + админка)",
+  "status": "in_progress",
+  "currentPhase": "analysis",
+  "startedAt": "2026-05-17T22:06:00+00:00",
+  "phases": {
+    "analysis": { "status": "in_progress" },
+    "codebase": { "status": "pending" },
+    "planning": { "status": "pending" },
+    "decomposition": { "status": "pending" },
+    "implementation": { "status": "pending" },
+    "review": { "status": "pending" },
+    "report": { "status": "pending" }
+  },
+  "signal": 42,
+  "tasks": []
+}
