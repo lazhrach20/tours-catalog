@@ -1,0 +1,29 @@
+# Local development overrides — copy to docker-compose.override.yml (gitignored)
+# Enables hot reload via bind mounts without rebuilding images on every code change.
+
+services:
+  api:
+    volumes:
+      - ./apps/api:/var/www/html:cached
+      - api_storage:/var/www/html/storage/app
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      OPCACHE_ENABLE: "0"
+
+  web:
+    volumes:
+      - ./apps/web:/app:cached
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+      API_PROXY_TARGET: http://api
+      VITE_API_BASE_URL: /api/v1
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "3000"]
+
+  embeddings:
+    volumes:
+      - ./services/embeddings:/app:cached
+      - embeddings_cache:/var/cache/huggingface
+    environment:
+      LOG_LEVEL: DEBUG

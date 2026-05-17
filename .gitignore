@@ -1,0 +1,47 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Docker local overrides
+docker-compose.override.yml
+
+# Dependencies
+node_modules/
+vendor/
+
+# Laravel / PHP
+apps/api/storage/*.key
+apps/api/.phpunit.result.cache
+apps/api/bootstrap/cache/*.php
+apps/api/storage/logs/
+apps/api/storage/framework/cache/
+apps/api/storage/framework/sessions/
+apps/api/storage/framework/views/
+
+# Build outputs
+apps/web/dist/
+apps/web/.vite/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Backups & uploads (local)
+storage/backups/
+apps/api/storage/app/public/
+
+# Python
+services/embeddings/.venv/
+services/embeddings/__pycache__/
+*.pyc
+.pytest_cache/
+
+# Embeddings model cache (host-side if used outside Docker)
+.hf_cache/
+
+# Execution artifacts
+.execution/

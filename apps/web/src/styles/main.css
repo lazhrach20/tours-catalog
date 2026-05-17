@@ -1,0 +1,10 @@
+@import 'tailwindcss';
+@import 'primeicons/primeicons.css';
+@import './theme.css';
+
+body {
+  margin: 0;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  background: var(--surface-ground, #f4f6f8);
+  color: var(--text-color, #1e293b);
+}

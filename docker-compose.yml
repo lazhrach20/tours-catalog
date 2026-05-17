@@ -1,0 +1,112 @@
+# Tours Catalog — base Docker Compose stack
+# Dev bind mounts: copy docker-compose.override.yml.example → docker-compose.override.yml
+
+name: ${COMPOSE_PROJECT_NAME:-tours-catalog}
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-tours_catalog}
+      POSTGRES_USER: ${DB_USERNAME:-tours}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change_me_db_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-tours} -d ${DB_DATABASE:-tours_catalog}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      AUTO_SEED: ${AUTO_SEED:-1}
+    volumes:
+      - api_storage:/var/www/html/storage/app
+    ports:
+      - "${API_PORT:-8080}:80"
+    networks:
+      - internal
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1/api/v1/health || exit 1"]
+      interval: 15s
+      timeout: 15s
+      retries: 8
+      start_period: 120s
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      HOST: 0.0.0.0
+      PORT: "3000"
+      API_INTERNAL_URL: http://api/api/v1
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    networks:
+      - internal
+    depends_on:
+      api:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:3000/health || exit 1"]
+      interval: 15s
+      timeout: 15s
+      retries: 8
+      start_period: 90s
+
+  embeddings:
+    build:
+      context: ./services/embeddings
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      EMBEDDINGS_MODEL: ${EMBEDDINGS_MODEL:-sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2}
+      HF_HOME: ${HF_HOME:-/var/cache/huggingface}
+      TRANSFORMERS_CACHE: ${TRANSFORMERS_CACHE:-/var/cache/huggingface}
+      MOCK_EMBEDDINGS: ${MOCK_EMBEDDINGS:-0}
+    volumes:
+      - embeddings_cache:/var/cache/huggingface
+    networks:
+      - internal
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8000/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 120s
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  api_storage:
+  embeddings_cache:

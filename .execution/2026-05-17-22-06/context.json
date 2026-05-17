@@ -2,8 +2,8 @@
   "executionId": "2026-05-17-22-06",
   "prdPath": "prds/tz_main.md",
   "prdTitle": "Каталог туров (публичная часть + админка)",
-  "status": "in_progress",
-  "currentPhase": "implementation",
+  "status": "completed",
+  "currentPhase": "report",
   "startedAt": "2026-05-17T22:06:00+00:00",
   "phases": {
     "analysis": {
@@ -57,13 +57,54 @@
       "defaultCount": 34
     },
     "implementation": {
-      "status": "pending"
+      "status": "completed",
+      "startedAt": "2026-05-17T22:30:00+00:00",
+      "completedTasks": 62,
+      "failedTasks": 0,
+      "completedAt": "2026-05-17T19:58:50.315Z"
     },
     "review": {
-      "status": "pending"
+      "status": "completed",
+      "completedAt": "2026-05-17T20:29:36.775Z",
+      "domains": {
+        "database": {
+          "status": "passed",
+          "retries": 0
+        },
+        "backend": {
+          "status": "passed",
+          "retries": 1,
+          "fixes": [
+            "health 503",
+            "PublishTourException handler",
+            "NOT_FOUND code",
+            "AdminTourIndexRequest"
+          ]
+        },
+        "frontend": {
+          "status": "passed",
+          "retries": 1,
+          "fixes": [
+            "API paths",
+            "SSR 404/errors",
+            "empty states"
+          ]
+        },
+        "ai-layer": {
+          "status": "passed",
+          "retries": 0
+        },
+        "infra": {
+          "status": "passed",
+          "retries": 0
+        }
+      },
+      "summary": "5/5 domains passed after 2 fix rounds (backend, frontend)"
     },
     "report": {
-      "status": "pending"
+      "status": "completed",
+      "completedAt": "2026-05-17T20:31:15.137Z",
+      "reportPath": ".execution/2026-05-17-22-06/report.md"
     }
   },
   "signal": 42,
@@ -77,7 +118,8 @@
       "complexity": "low",
       "model": "fast",
       "dependencies": [],
-      "status": "pending"
+      "status": "completed",
+      "completedAt": "2026-05-17T18:33:42.016Z"
     },
     {
       "id": "task-002",
@@ -90,7 +132,8 @@
       "dependencies": [
         "task-001"
       ],
-      "status": "pending"
+      "status": "completed",
+      "completedAt": "2026-05-17T18:33:42.018Z"
     },
     {
       "id": "task-003",
@@ -103,7 +146,8 @@
       "dependencies": [
         "task-002"
       ],
-      "status": "pending"
+      "status": "completed",
+      "completedAt": "2026-05-17T18:33:42.018Z"
     },
     {
       "id": "task-004",
@@ -116,7 +160,8 @@
       "dependencies": [
         "task-002"
       ],
-      "status": "pending"
+      "status": "completed",
+      "completedAt": "2026-05-17T18:33:42.018Z"
     },
     {
       "id": "task-005",
@@ -129,7 +174,8 @@
       "dependencies": [
         "task-004"
       ],
-      "status": "pending"
+      "status": "completed",
+      "completedAt": "2026-05-17T18:33:42.018Z"
     },
     {
       "id": "task-006",
@@ -142,7 +188,8 @@
       "dependencies": [
         "task-005"
       ],
-      "status": "pending"
+      "status": "completed",
+      "completedAt": "2026-05-17T18:33:42.018Z"
     },
     {
       "id": "task-007",
@@ -155,7 +202,8 @@
       "dependencies": [
         "task-006"
       ],
-      "status": "pending"
+      "status": "completed",
+      "completedAt": "2026-05-17T18:33:42.018Z"
     },
     {
       "id": "task-008",
@@ -169,7 +217,7 @@
         "task-003",
         "task-005"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-009",
@@ -182,7 +230,7 @@
       "dependencies": [
         "task-008"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-010",
@@ -195,7 +243,7 @@
       "dependencies": [
         "task-009"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-011",
@@ -208,7 +256,7 @@
       "dependencies": [
         "task-010"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-012",
@@ -221,7 +269,7 @@
       "dependencies": [
         "task-011"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-013",
@@ -234,7 +282,7 @@
       "dependencies": [
         "task-011"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-014",
@@ -247,7 +295,7 @@
       "dependencies": [
         "task-012"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-015",
@@ -260,7 +308,7 @@
       "dependencies": [
         "task-010"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-016",
@@ -274,7 +322,7 @@
         "task-014",
         "task-015"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-017",
@@ -287,7 +335,7 @@
       "dependencies": [
         "task-003"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-018",
@@ -300,7 +348,7 @@
       "dependencies": [
         "task-017"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-019",
@@ -313,7 +361,7 @@
       "dependencies": [
         "task-008"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-020",
@@ -327,7 +375,7 @@
         "task-019",
         "task-010"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-021",
@@ -340,7 +388,7 @@
       "dependencies": [
         "task-014"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-022",
@@ -353,7 +401,7 @@
       "dependencies": [
         "task-014"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-023",
@@ -367,7 +415,7 @@
         "task-021",
         "task-022"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-024",
@@ -380,7 +428,7 @@
       "dependencies": [
         "task-008"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-025",
@@ -394,7 +442,7 @@
         "task-023",
         "task-024"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-026",
@@ -408,7 +456,7 @@
         "task-018",
         "task-008"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-027",
@@ -422,7 +470,7 @@
         "task-026",
         "task-011"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-028",
@@ -436,7 +484,7 @@
         "task-027",
         "task-013"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-029",
@@ -449,7 +497,7 @@
       "dependencies": [
         "task-013"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-030",
@@ -465,7 +513,7 @@
         "task-029",
         "task-027"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-031",
@@ -478,7 +526,7 @@
       "dependencies": [
         "task-008"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-032",
@@ -492,7 +540,7 @@
         "task-031",
         "task-010"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-033",
@@ -505,7 +553,7 @@
       "dependencies": [
         "task-032"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-034",
@@ -519,7 +567,7 @@
         "task-033",
         "task-027"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-035",
@@ -532,7 +580,7 @@
       "dependencies": [
         "task-033"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-036",
@@ -546,7 +594,7 @@
         "task-034",
         "task-012"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-037",
@@ -560,7 +608,7 @@
         "task-034",
         "task-012"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-038",
@@ -573,7 +621,7 @@
       "dependencies": [
         "task-034"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-039",
@@ -586,7 +634,7 @@
       "dependencies": [
         "task-034"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-040",
@@ -600,7 +648,7 @@
         "task-033",
         "task-010"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-041",
@@ -614,7 +662,7 @@
         "task-001",
         "task-003"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-042",
@@ -627,7 +675,7 @@
       "dependencies": [
         "task-041"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-043",
@@ -640,7 +688,7 @@
       "dependencies": [
         "task-041"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-044",
@@ -654,7 +702,7 @@
         "task-043",
         "task-023"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-045",
@@ -667,7 +715,7 @@
       "dependencies": [
         "task-044"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-046",
@@ -681,7 +729,7 @@
         "task-044",
         "task-020"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-047",
@@ -695,7 +743,7 @@
         "task-046",
         "task-030"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-048",
@@ -709,7 +757,7 @@
         "task-043",
         "task-025"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-049",
@@ -722,7 +770,7 @@
       "dependencies": [
         "task-048"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-050",
@@ -735,7 +783,7 @@
       "dependencies": [
         "task-044"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-051",
@@ -749,7 +797,7 @@
         "task-043",
         "task-032"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-052",
@@ -763,7 +811,7 @@
         "task-051",
         "task-035"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-053",
@@ -777,7 +825,7 @@
         "task-052",
         "task-034"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-054",
@@ -791,7 +839,7 @@
         "task-053",
         "task-037"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-055",
@@ -805,7 +853,7 @@
         "task-053",
         "task-038"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-056",
@@ -820,7 +868,7 @@
         "task-039",
         "task-040"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-057",
@@ -834,7 +882,7 @@
         "task-033",
         "task-040"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-058",
@@ -848,7 +896,7 @@
         "task-053",
         "task-057"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-059",
@@ -861,7 +909,7 @@
       "dependencies": [
         "task-036"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-060",
@@ -874,7 +922,7 @@
       "dependencies": [
         "task-030"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-061",
@@ -888,7 +936,7 @@
         "task-006",
         "task-060"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "task-062",
@@ -903,7 +951,8 @@
         "task-016",
         "task-007"
       ],
-      "status": "pending"
+      "status": "completed"
     }
-  ]
+  ],
+  "completedAt": "2026-05-17T20:31:15.137Z"
 }

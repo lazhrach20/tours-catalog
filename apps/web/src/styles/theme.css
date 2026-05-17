@@ -1,0 +1,27 @@
+@theme {
+  --font-sans: "Segoe UI", system-ui, sans-serif;
+  --color-brand-500: #0d6e6e;
+  --color-brand-600: #0a5858;
+  --color-brand-700: #084242;
+  --radius-card: 0.875rem;
+  --radius-button: 0.625rem;
+}
+
+:root {
+  --font-sans: "Segoe UI", system-ui, sans-serif;
+  --brand-primary: #0d6e6e;
+  --brand-primary-hover: #0a5858;
+  --surface-ground: #f0f4f4;
+  --text-color: #1a2e2e;
+}
+
+.p-button-primary,
+.p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-secondary) {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+
+.p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-secondary):hover {
+  background: var(--brand-primary-hover);
+  border-color: var(--brand-primary-hover);
+}

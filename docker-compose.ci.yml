@@ -1,0 +1,28 @@
+# CI overlay — use with: COMPOSE_FILE=docker-compose.yml:docker-compose.ci.yml
+# Enables fast embeddings stub and production-like containers (no dev bind mounts).
+
+services:
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+      args:
+        INSTALL_DEV: "true"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "false"
+      SESSION_DRIVER: array
+      CACHE_STORE: array
+
+  embeddings:
+    environment:
+      MOCK_EMBEDDINGS: "1"
+    healthcheck:
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  web:
+    environment:
+      NODE_ENV: production

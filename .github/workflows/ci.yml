@@ -1,0 +1,55 @@
+# name: CI
+
+# on:
+#   push:
+#     branches: [main, master]
+#   pull_request:
+
+# env:
+#   COMPOSE_FILE: docker-compose.yml:docker-compose.ci.yml
+#   MOCK_EMBEDDINGS: "1"
+
+# jobs:
+#   ci:
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 45
+
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+
+#       - name: Prepare environment
+#         run: |
+#           cp .env.example .env
+#           echo "MOCK_EMBEDDINGS=1" >> .env
+
+#       - name: Build images
+#         run: docker compose build
+
+#       - name: Start stack
+#         run: docker compose up -d
+
+#       - name: Wait for services
+#         run: |
+#           for i in $(seq 1 60); do
+#             if make health; then
+#               exit 0
+#             fi
+#             sleep 5
+#           done
+#           echo "Services did not become healthy in time"
+#           docker compose ps
+#           docker compose logs --tail=80
+#           exit 1
+
+#       - name: Generate application key
+#         run: docker compose exec -T api php artisan key:generate --force
+
+#       - name: Run migrations
+#         run: make migrate
+
+#       - name: Install API test dependencies
+#         run: docker compose exec -T api composer install --no-interaction
+
+#       - name: Run CI checks
+#         run: make ci
